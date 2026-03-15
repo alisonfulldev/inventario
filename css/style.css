@@ -285,9 +285,6 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
    CABEÇALHO DA SEÇÃO DE FOTOS
    ============================================================ */
 .photos-header {
-  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
-  border-radius: var(--r);
-  padding: 18px 20px 16px;
   margin-bottom: 20px;
   width: 100%;
 }
@@ -300,20 +297,13 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 .photos-header__title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   letter-spacing: -.3px;
   flex: 1;
 }
 .photos-header__hint {
   font-size: .8125rem;
-  color: rgba(255,255,255,.65);
-}
-.photos-header .photo-progress__bar {
-  background: rgba(255,255,255,.25);
-}
-.photos-header .photo-progress__text {
-  color: #fff;
-  font-size: 1rem;
+  color: var(--text-muted);
 }
 
 /* ============================================================
@@ -361,8 +351,7 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 0 12px 12px;
-  border-left: 4px solid var(--green);
+  padding: 0 4px 12px;
 }
 .equip-group__icon { font-size: 1.375rem; line-height: 1; }
 .equip-group__name {
@@ -415,9 +404,8 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 20px 16px;
-  background: #f8faf8;
-  border-bottom: 1px solid var(--border-light);
+  padding: 20px 20px 18px;
+  background: var(--surface);
 }
 .item-card__icon { font-size: 1.5rem; line-height: 1; }
 .item-card__name {
