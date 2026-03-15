@@ -281,6 +281,29 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 .status-btn.selected-retirado .status-label { color: var(--danger); }
 
 /* ============================================================
+   CABEÇALHO DA SEÇÃO DE FOTOS
+   ============================================================ */
+.photos-header {
+  margin-bottom: 20px;
+}
+.photos-header__top {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.photos-header__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.3px;
+}
+.photos-header__hint {
+  font-size: .875rem;
+  color: var(--text-muted);
+}
+
+/* ============================================================
    PROGRESS BAR
    ============================================================ */
 .photo-progress {
