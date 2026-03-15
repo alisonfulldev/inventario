@@ -253,23 +253,23 @@
 }
 .stat-card {
   background: var(--surface);
-  border-radius: var(--radius);
-  padding: 16px 12px;
+  border-radius: var(--r);
+  padding: 18px 12px;
   text-align: center;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
 }
 .stat-card__value {
-  font-size: 1.75rem;
+  font-size: 1.875rem;
   font-weight: 800;
   color: var(--green-dark);
   line-height: 1;
   letter-spacing: -.5px;
 }
 .stat-card__label {
-  font-size: .75rem;
+  font-size: .8125rem;
   color: var(--text-muted);
-  margin-top: 5px;
+  margin-top: 6px;
   font-weight: 600;
 }
 

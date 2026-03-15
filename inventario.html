@@ -19,8 +19,8 @@
   </div>
   <div class="topbar__actions">
     <span class="topbar__user" id="user-name"></span>
-    <a href="admin.html" class="btn btn--ghost" id="admin-link" style="display:none">⚙</a>
-    <button class="btn btn--ghost" id="btn-logout">Sair</button>
+    <a href="admin.html" class="btn btn--ghost btn--sm" id="admin-link" style="display:none">⚙</a>
+    <button class="btn btn--ghost btn--sm" id="btn-logout">Sair</button>
   </div>
 </header>
 
@@ -39,8 +39,7 @@
         </div>
         <div class="form-group" style="margin:0">
           <label for="frota">Frota <span class="required">*</span></label>
-          <input type="text" id="frota" placeholder="Ex: F-001"
-                 autocomplete="off">
+          <input type="text" id="frota" placeholder="Ex: F-001" autocomplete="off">
         </div>
       </div>
     </div>
@@ -65,11 +64,11 @@
     <!-- ── FOTOS E SÉRIES ──────────────────────────────────── -->
     <div class="simple-card">
       <p class="simple-card__title">
-        📷 Fotos e séries
-        <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.75rem;color:var(--text-muted)">(série opcional · fotos ilimitadas)</span>
+        📷 Fotos
+        <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.875rem;color:var(--text-muted)">&nbsp;· série opcional · fotos ilimitadas</span>
       </p>
 
-      <!-- Barra de progresso global -->
+      <!-- Progresso global -->
       <div class="photo-progress">
         <div class="photo-progress__bar">
           <div class="photo-progress__fill" id="progress-fill"></div>
@@ -77,7 +76,7 @@
         <span class="photo-progress__text" id="progress-text">0 / 8</span>
       </div>
 
-      <!-- ══ BORDO — Bordo + Tela + Chip ══ -->
+      <!-- ══ BORDO ══ -->
       <div class="equip-group" id="group-bordo">
         <div class="equip-group__header">
           <span class="equip-group__icon">📱</span>
@@ -86,11 +85,10 @@
         </div>
         <div class="items-grid">
 
-          <!-- Bordo (unidade) -->
           <div class="item-card" id="card-bordo">
             <div class="item-card__header">
               <span class="item-card__icon">📱</span>
-              <span class="item-card__name">Bordo</span>
+              <span class="item-card__name">Unidade Bordo</span>
               <span class="item-card__badge" id="badge-bordo">0</span>
             </div>
             <div class="item-card__loading" id="loading-bordo"><span class="spinner spinner--green"></span></div>
@@ -102,11 +100,10 @@
             </div>
             <input type="file" class="item-file" id="foto-bordo" accept="image/*" data-type="bordo" data-group="bordo">
             <div class="item-card__fields">
-              <input type="text" id="serie-bordo" placeholder="Nº série" autocomplete="off">
+              <input type="text" id="serie-bordo" placeholder="Nº série bordo" autocomplete="off">
             </div>
           </div>
 
-          <!-- Tela -->
           <div class="item-card" id="card-tela">
             <div class="item-card__header">
               <span class="item-card__icon">🖥</span>
@@ -122,15 +119,14 @@
             </div>
             <input type="file" class="item-file" id="foto-tela" accept="image/*" data-type="tela" data-group="bordo">
             <div class="item-card__fields">
-              <input type="text" id="serie-tela" placeholder="Nº série" autocomplete="off">
+              <input type="text" id="serie-tela" placeholder="Nº série tela" autocomplete="off">
             </div>
           </div>
 
-          <!-- Chip Bordo -->
           <div class="item-card" id="card-chip-bordo">
             <div class="item-card__header">
               <span class="item-card__icon">📶</span>
-              <span class="item-card__name">Chip</span>
+              <span class="item-card__name">Chip Bordo</span>
               <span class="item-card__badge" id="badge-chip-bordo">0</span>
             </div>
             <div class="item-card__loading" id="loading-chip-bordo"><span class="spinner spinner--green"></span></div>
@@ -142,7 +138,7 @@
             </div>
             <input type="file" class="item-file" id="foto-chip-bordo" accept="image/*" data-type="chip-bordo" data-group="bordo">
             <div class="item-card__fields">
-              <input type="text" id="chip-bordo" placeholder="Nº chip" inputmode="numeric" autocomplete="off">
+              <input type="text" id="chip-bordo" placeholder="Número do chip" inputmode="numeric" autocomplete="off">
             </div>
           </div>
 
@@ -181,7 +177,7 @@
         </div>
       </div><!-- /group radio -->
 
-      <!-- ══ PILOTO AUTOMÁTICO — Monitor + Receptor + Nave ══ -->
+      <!-- ══ PILOTO AUTOMÁTICO ══ -->
       <div class="equip-group" id="group-piloto">
         <div class="equip-group__header">
           <span class="equip-group__icon">🎯</span>
@@ -190,7 +186,6 @@
         </div>
         <div class="items-grid">
 
-          <!-- Monitor -->
           <div class="item-card" id="card-monitor">
             <div class="item-card__header">
               <span class="item-card__icon">🖥</span>
@@ -206,11 +201,10 @@
             </div>
             <input type="file" class="item-file" id="foto-monitor" accept="image/*" data-type="monitor" data-group="piloto">
             <div class="item-card__fields">
-              <input type="text" id="serie-monitor" placeholder="Nº série" autocomplete="off">
+              <input type="text" id="serie-monitor" placeholder="Nº série monitor" autocomplete="off">
             </div>
           </div>
 
-          <!-- Receptor -->
           <div class="item-card" id="card-receptor">
             <div class="item-card__header">
               <span class="item-card__icon">📡</span>
@@ -226,11 +220,10 @@
             </div>
             <input type="file" class="item-file" id="foto-receptor" accept="image/*" data-type="receptor" data-group="piloto">
             <div class="item-card__fields">
-              <input type="text" id="serie-receptor" placeholder="Nº série" autocomplete="off">
+              <input type="text" id="serie-receptor" placeholder="Nº série receptor" autocomplete="off">
             </div>
           </div>
 
-          <!-- Nave -->
           <div class="item-card" id="card-nave">
             <div class="item-card__header">
               <span class="item-card__icon">🛰</span>
@@ -290,7 +283,9 @@
 
     <!-- ── OBSERVAÇÃO ──────────────────────────────────────── -->
     <div class="simple-card">
-      <p class="simple-card__title">📝 Observação <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.75rem;color:var(--text-muted)">(opcional)</span></p>
+      <p class="simple-card__title">📝 Observação
+        <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.875rem;color:var(--text-muted)">&nbsp;(opcional)</span>
+      </p>
       <textarea id="observacao" placeholder="Alguma observação relevante…" rows="3"></textarea>
     </div>
 
