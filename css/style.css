@@ -285,23 +285,35 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
    CABEÇALHO DA SEÇÃO DE FOTOS
    ============================================================ */
 .photos-header {
+  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  border-radius: var(--r);
+  padding: 18px 20px 16px;
   margin-bottom: 20px;
+  width: 100%;
 }
 .photos-header__top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
   margin-bottom: 12px;
 }
 .photos-header__title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--text);
+  color: #fff;
   letter-spacing: -.3px;
+  flex: 1;
 }
 .photos-header__hint {
-  font-size: .875rem;
-  color: var(--text-muted);
+  font-size: .8125rem;
+  color: rgba(255,255,255,.65);
+}
+.photos-header .photo-progress__bar {
+  background: rgba(255,255,255,.25);
+}
+.photos-header .photo-progress__text {
+  color: #fff;
+  font-size: 1rem;
 }
 
 /* ============================================================
@@ -349,7 +361,8 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 4px 12px;
+  padding: 0 0 12px 12px;
+  border-left: 4px solid var(--green);
 }
 .equip-group__icon { font-size: 1.375rem; line-height: 1; }
 .equip-group__name {
@@ -402,8 +415,9 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 20px 20px 18px;
-  background: var(--surface);
+  padding: 18px 20px 16px;
+  background: #f8faf8;
+  border-bottom: 1px solid var(--border-light);
 }
 .item-card__icon { font-size: 1.5rem; line-height: 1; }
 .item-card__name {
