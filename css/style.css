@@ -316,30 +316,30 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
    GRUPOS DE EQUIPAMENTO — estilo seção de app
    ============================================================ */
 .equip-group {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 .equip-group:last-child { margin-bottom: 0; }
 
 .equip-group__header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 4px 10px;
+  gap: 12px;
+  padding: 0 4px 12px;
 }
-.equip-group__icon { font-size: 1.25rem; line-height: 1; }
+.equip-group__icon { font-size: 1.375rem; line-height: 1; }
 .equip-group__name {
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--text);
   flex: 1;
   letter-spacing: -.3px;
 }
 .equip-group__count {
-  font-size: .8125rem;
+  font-size: .875rem;
   font-weight: 700;
   background: #f3f4f6;
   color: var(--text-muted);
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
   white-space: nowrap;
 }
@@ -374,26 +374,26 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 .item-card__header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 18px 14px;
+  gap: 14px;
+  padding: 20px 20px 18px;
   background: var(--surface);
 }
-.item-card__icon { font-size: 1.25rem; line-height: 1; }
+.item-card__icon { font-size: 1.5rem; line-height: 1; }
 .item-card__name {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: var(--text);
   flex: 1;
   letter-spacing: -.2px;
 }
 .item-card__badge {
-  font-size: .8125rem;
+  font-size: .875rem;
   font-weight: 700;
   background: #f3f4f6;
   color: var(--text-muted);
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
-  min-width: 34px;
+  min-width: 38px;
   text-align: center;
   transition: all .2s;
   white-space: nowrap;
@@ -406,9 +406,9 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 /* Strip de thumbnails */
 .item-card__thumbs {
   display: flex;
-  gap: 8px;
-  padding: 0 18px 16px;
-  min-height: 92px;
+  gap: 10px;
+  padding: 0 20px 20px;
+  min-height: 116px;
   overflow-x: auto;
   align-items: center;
   -webkit-overflow-scrolling: touch;
@@ -419,24 +419,24 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 .thumb-item {
   position: relative;
   flex-shrink: 0;
-  width: 72px;
-  height: 72px;
-  border-radius: 10px;
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
   overflow: hidden;
   background: #e5ede5;
-  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  box-shadow: 0 2px 6px rgba(0,0,0,.13);
 }
 .thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .thumb-del {
   position: absolute;
-  top: 4px; right: 4px;
-  width: 24px; height: 24px;
+  top: 5px; right: 5px;
+  width: 26px; height: 26px;
   border-radius: 50%;
   background: rgba(0,0,0,.62);
   color: #fff;
   border: none;
-  font-size: 10px;
+  font-size: 11px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   padding: 0;
@@ -446,21 +446,21 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 
 .thumb-add {
   flex-shrink: 0;
-  width: 72px; height: 72px;
-  border-radius: 10px;
+  width: 90px; height: 90px;
+  border-radius: 12px;
   border: 2px dashed #86efac;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
   background: #f0fdf4;
   touch-action: manipulation;
   transition: background .15s, border-color .15s;
 }
 .thumb-add:active { background: #dcfce7; border-color: var(--green); }
-.thumb-add__icon { font-size: 1.5rem; line-height: 1; }
+.thumb-add__icon { font-size: 1.75rem; line-height: 1; }
 .thumb-add__text {
-  font-size: .625rem;
+  font-size: .6875rem;
   font-weight: 700;
   color: var(--green);
   text-transform: uppercase;
@@ -479,15 +479,14 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
 
 /* Campos de série */
 .item-card__fields {
-  padding: 0 18px 18px;
-  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 20px 20px;
+  display: flex; flex-direction: column; gap: 12px;
   border-top: 1px solid var(--border-light);
-  padding-top: 14px;
 }
 /* CRÍTICO: 16px em todos os inputs dentro do card */
 .item-card__fields input {
   font-size: 16px;
-  padding: 13px 15px;
+  padding: 15px 16px;
   border: 1.5px solid var(--border);
   border-radius: var(--r-sm);
   width: 100%;
@@ -496,7 +495,7 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
   font-family: var(--font);
   -webkit-appearance: none;
   appearance: none;
-  min-height: 50px;
+  min-height: 54px;
   transition: border-color var(--transition);
 }
 .item-card__fields input:focus {
