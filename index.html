@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#1b5e20">
+  <title>Login — Inventário Embarcados</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Quick fill buttons for demo */
+    .demo-accounts { display: flex; gap: 8px; margin-bottom: 18px; }
+    .demo-btn {
+      flex: 1; padding: 9px 6px; background: #f1f8f0; border: 1.5px solid #c8e6c9;
+      border-radius: 8px; font-size: .74rem; font-weight: 700; color: #2e7d32;
+      cursor: pointer; text-align: center; transition: background .15s;
+      font-family: inherit;
+    }
+    .demo-btn:hover { background: #dcedc8; }
+    .demo-btn small { display: block; font-weight: 400; color: #6b7b66; margin-top: 1px; }
+  </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">🌾</div>
+      <h1>Inventário Embarcados</h1>
+      <p>Sistema de registro agrícola em campo</p>
+    </div>
+
+    <!-- Acesso rápido demo -->
+    <div class="login-demo-hint">
+      <strong>Modo demo</strong> — clique para preencher:<br>
+    </div>
+    <div class="demo-accounts">
+      <button type="button" class="demo-btn" onclick="fillDemo('tecnico@demo.com')">
+        👷 Técnico
+        <small>tecnico@demo.com</small>
+      </button>
+      <button type="button" class="demo-btn" onclick="fillDemo('admin@demo.com')">
+        ⚙️ Admin
+        <small>admin@demo.com</small>
+      </button>
+    </div>
+
+    <div class="login-error" id="login-error"></div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label for="email">E-mail <span class="required">*</span></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="seu@email.com"
+          autocomplete="email"
+          inputmode="email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha <span class="required">*</span></label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button type="submit" class="btn btn--primary" id="btn-login">
+        Entrar
+      </button>
+    </form>
+  </div>
+
+  <p class="version-tag">v1.0 — Inventário de Sistemas Embarcados</p>
+</div>
+
+<!-- MODO DEMO: carrega mock local sem Firebase real -->
+<!-- Para produção: substitua esta linha pelos 5 scripts do Firebase CDN + firebase-config.js (veja CONFIGURACAO.md) -->
+<script src="js/firebase-demo.js"></script>
+
+<script>
+  function fillDemo(email) {
+    document.getElementById('email').value    = email;
+    document.getElementById('password').value = '123456';
+    document.getElementById('email').focus();
+  }
+
+  // Redireciona se já está logado
+  auth.onAuthStateChanged((user) => {
+    if (user) window.location.href = 'inventario.html';
+  });
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn  = document.getElementById('btn-login');
+    const errEl = document.getElementById('login-error');
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value;
+
+    errEl.style.display = 'none';
+    btn.disabled  = true;
+    btn.innerHTML = '<span class="spinner"></span> Entrando...';
+
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+      // onAuthStateChanged cuida do redirect
+    } catch (err) {
+      const msgs = {
+        'auth/user-not-found':    'Usuário não encontrado.',
+        'auth/wrong-password':    'Senha incorreta.',
+        'auth/invalid-email':     'E-mail inválido.',
+        'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde.',
+        'auth/invalid-credential':'E-mail ou senha incorretos.',
+      };
+      errEl.textContent    = msgs[err.code] || 'Erro ao entrar: ' + err.message;
+      errEl.style.display  = 'block';
+      btn.disabled  = false;
+      btn.innerHTML = 'Entrar';
+    }
+  });
+</script>
+</body>
+</html>

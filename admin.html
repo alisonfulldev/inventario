@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#1b5e20">
+  <title>Admin — Inventário Embarcados</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ═══ TOPBAR ══════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <span class="brand-icon">⚙️</span>
+    <span>Painel Admin</span>
+  </div>
+  <div class="topbar__actions">
+    <span class="topbar__user" id="admin-email"></span>
+    <a href="inventario.html" class="btn btn--ghost">+ Novo</a>
+    <button class="btn btn--ghost" id="btn-logout">Sair</button>
+  </div>
+</header>
+
+<!-- ═══ PAGE HEADER ══════════════════════════════════════════ -->
+<div class="page-header">
+  <div class="container" style="padding-bottom:0;padding-top:0;margin:0 auto;max-width:760px">
+    <h1>📊 Painel de Inventários</h1>
+    <p>Consulte, visualize e baixe os registros de campo</p>
+  </div>
+</div>
+
+<!-- ═══ CONTEÚDO ════════════════════════════════════════════ -->
+<main class="container" style="max-width:760px">
+
+  <!-- Stats -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-card__value" id="stat-total">—</div>
+      <div class="stat-card__label">Total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value" id="stat-instalados">—</div>
+      <div class="stat-card__label">Instalados</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value" id="stat-retirados">—</div>
+      <div class="stat-card__label">Retirados</div>
+    </div>
+  </div>
+
+  <!-- Busca -->
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        type="search"
+        id="search-input"
+        placeholder="Buscar frota, matrícula ou nº série…"
+        autocomplete="off"
+        inputmode="search"
+      >
+      <button id="btn-clear-search" title="Limpar busca">✕</button>
+    </div>
+    <select id="search-campo">
+      <option value="all">Todos</option>
+      <option value="frota">Frota</option>
+      <option value="matricula">Matrícula</option>
+      <option value="serie">Nº Série</option>
+    </select>
+  </div>
+
+  <p class="result-count" id="result-count">Carregando…</p>
+
+  <!-- Lista -->
+  <div id="inventario-list"></div>
+
+  <!-- Gráficos -->
+  <div class="charts-section" style="margin-top:24px">
+    <div class="charts-header">
+      <span class="charts-header__title">📊 Gráficos & Análises</span>
+      <button class="charts-toggle-btn" id="btn-charts-toggle">▼ ver gráficos</button>
+    </div>
+    <div class="charts-body charts-body--hidden" id="charts-body">
+
+      <!-- Linha 1: Status + Por técnico -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <p class="chart-card__title">Status dos registros</p>
+          <div class="chart-canvas-wrap" style="height:170px">
+            <canvas id="chart-status"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <p class="chart-card__title">Registros por técnico</p>
+          <div class="chart-canvas-wrap" style="height:170px">
+            <canvas id="chart-tech"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linha 2: Timeline -->
+      <div class="chart-card">
+        <p class="chart-card__title">Registros por data</p>
+        <div class="chart-canvas-wrap" style="height:170px">
+          <canvas id="chart-timeline"></canvas>
+        </div>
+      </div>
+
+      <!-- Linha 3: Cobertura de fotos -->
+      <div class="chart-card">
+        <p class="chart-card__title">
+          Cobertura de fotos por equipamento
+          <span class="chart-card__subtitle">% de inventários com ≥ 1 foto</span>
+        </p>
+        <div class="chart-canvas-wrap" style="height:230px">
+          <canvas id="chart-equip"></canvas>
+        </div>
+      </div>
+
+    </div><!-- /charts-body -->
+  </div><!-- /charts-section -->
+
+</main>
+
+<!-- ═══ MODAL DE DETALHES ════════════════════════════════════ -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="modal-title">Detalhes do Inventário</h2>
+      <button class="modal__close" id="modal-close" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal__body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- MODO DEMO: carrega mock local sem Firebase real -->
+<script src="js/firebase-demo.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- JSZip + FileSaver -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+
+<!-- Atualiza stats + gráficos após carregar -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const origRender = window.renderList;
+    window.renderList = function(docs) {
+      origRender(docs);
+      const total = allInventarios.length;
+      const inst  = allInventarios.filter(d => d.status === 'instalados').length;
+      const ret   = allInventarios.filter(d => d.status === 'retirados').length;
+      document.getElementById('stat-total').textContent      = total;
+      document.getElementById('stat-instalados').textContent = inst;
+      document.getElementById('stat-retirados').textContent  = ret;
+      renderCharts(allInventarios);
+    };
+  });
+</script>
+</body>
+</html>

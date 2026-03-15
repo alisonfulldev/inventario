@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#1b5e20">
+  <title>Inventário — Sistemas Embarcados</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Grupos de equipamento ───────────────────────────── */
+    .equip-group {
+      background: #f5f8f4;
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .equip-group:last-child { margin-bottom: 0; }
+
+    .equip-group__header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 9px;
+      padding-bottom: 7px;
+      border-bottom: 1.5px solid #e0e8db;
+    }
+    .equip-group__icon { font-size: 1rem; line-height: 1; }
+    .equip-group__name {
+      font-size: .72rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .equip-group__count {
+      margin-left: auto;
+      font-size: .68rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .equip-group__count.done { color: var(--green); }
+
+    /* ── Cards multi-foto ────────────────────────────────── */
+    .item-card {
+      position: relative;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .item-card__header {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 10px 7px;
+      background: #f0f5ef;
+      border-bottom: 1px solid var(--border);
+    }
+    .item-card__icon { font-size: .88rem; line-height: 1; }
+    .item-card__name { font-size: .7rem; font-weight: 700; color: var(--green-dark); flex: 1; }
+    .item-card__badge {
+      font-size: .6rem;
+      font-weight: 700;
+      background: #e0ebe0;
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 20px;
+      min-width: 26px;
+      text-align: center;
+      transition: background .2s, color .2s;
+      white-space: nowrap;
+    }
+    .item-card__badge.has-photos { background: var(--green); color: #fff; }
+
+    .item-card__thumbs {
+      display: flex;
+      gap: 5px;
+      padding: 7px 8px;
+      min-height: 68px;
+      overflow-x: auto;
+      align-items: center;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .item-card__thumbs::-webkit-scrollbar { display: none; }
+
+    .thumb-item {
+      position: relative;
+      flex-shrink: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #dde8d8;
+    }
+    .thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb-del {
+      position: absolute;
+      top: 2px; right: 2px;
+      width: 17px; height: 17px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.6);
+      color: #fff;
+      border: none;
+      font-size: 9px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      padding: 0; line-height: 1;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .thumb-add {
+      flex-shrink: 0;
+      width: 50px; height: 50px;
+      border-radius: 6px;
+      border: 2px dashed #a5d6a7;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1px;
+      cursor: pointer;
+      background: #f3f8f2;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s, border-color .15s;
+    }
+    .thumb-add:active { background: #e2f0e2; border-color: var(--green); }
+    .thumb-add__icon { font-size: 1.2rem; line-height: 1; }
+    .thumb-add__text { font-size: .5rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .3px; }
+
+    .item-card__loading {
+      display: none;
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,.82);
+      z-index: 5; border-radius: 10px;
+      align-items: center; justify-content: center;
+    }
+    .item-card__loading.active { display: flex; }
+
+    .item-card__fields {
+      padding: 0 8px 8px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .item-card__fields input {
+      font-size: 14px;
+      padding: 7px 9px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      width: 100%;
+      background: #f9fbf8;
+      color: var(--text);
+      font-family: inherit;
+      -webkit-appearance: none;
+    }
+    .item-card__fields input:focus {
+      outline: none; border-color: var(--green-light); background: #fff;
+    }
+    .item-card__fields input::placeholder { color: #a8b8a4; font-size: .72rem; }
+
+    /* input file escondido */
+    .item-file { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ══════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <span class="brand-icon">🌾</span>
+    <span>Embarcados</span>
+  </div>
+  <div class="topbar__actions">
+    <span class="topbar__user" id="user-name"></span>
+    <a href="admin.html" class="btn btn--ghost" id="admin-link" style="display:none">⚙</a>
+    <button class="btn btn--ghost" id="btn-logout">Sair</button>
+  </div>
+</header>
+
+<!-- ═══ FORMULÁRIO ══════════════════════════════════════════ -->
+<main class="container">
+  <form id="form-inventario" novalidate>
+
+    <!-- ── IDENTIFICAÇÃO ──────────────────────────────────── -->
+    <div class="simple-card">
+      <p class="simple-card__title">🚜 Identificação</p>
+      <div class="id-row">
+        <div class="form-group" style="margin:0">
+          <label for="matricula">Matrícula <span class="required">*</span></label>
+          <input type="text" id="matricula" placeholder="Ex: 12345"
+                 inputmode="numeric" autocomplete="off" style="font-weight:700">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label for="frota">Frota <span class="required">*</span></label>
+          <input type="text" id="frota" placeholder="Ex: F-001"
+                 autocomplete="off" style="font-weight:700">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATUS ─────────────────────────────────────────── -->
+    <div class="simple-card">
+      <p class="simple-card__title">📋 Status <span class="required">*</span></p>
+      <div class="status-row">
+        <label class="status-btn" id="lbl-instalado">
+          <input type="radio" name="status" value="instalados">
+          ✅ Instalados
+        </label>
+        <label class="status-btn" id="lbl-retirado">
+          <input type="radio" name="status" value="retirados">
+          🔧 Retirados
+        </label>
+      </div>
+    </div>
+
+    <!-- ── FOTOS E SÉRIES ──────────────────────────────────── -->
+    <div class="simple-card">
+      <p class="simple-card__title">
+        📷 Fotos e séries
+        <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.68rem">(série opcional · fotos ilimitadas)</span>
+      </p>
+
+      <!-- Barra de progresso global -->
+      <div class="photo-progress">
+        <div class="photo-progress__bar">
+          <div class="photo-progress__fill" id="progress-fill"></div>
+        </div>
+        <span class="photo-progress__text" id="progress-text">0 / 8</span>
+      </div>
+
+      <!-- ══ BORDO — Bordo + Tela + Chip ══ -->
+      <div class="equip-group" id="group-bordo">
+        <div class="equip-group__header">
+          <span class="equip-group__icon">📱</span>
+          <span class="equip-group__name">Bordo</span>
+          <span class="equip-group__count" id="count-bordo">0 / 3</span>
+        </div>
+        <div class="items-grid">
+
+          <!-- Bordo (unidade) -->
+          <div class="item-card" id="card-bordo">
+            <div class="item-card__header">
+              <span class="item-card__icon">📱</span>
+              <span class="item-card__name">Bordo</span>
+              <span class="item-card__badge" id="badge-bordo">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-bordo"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-bordo">
+              <label class="thumb-add" for="foto-bordo">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-bordo" accept="image/*" data-type="bordo" data-group="bordo">
+            <div class="item-card__fields">
+              <input type="text" id="serie-bordo" placeholder="Nº série bordo" autocomplete="off">
+            </div>
+          </div>
+
+          <!-- Tela -->
+          <div class="item-card" id="card-tela">
+            <div class="item-card__header">
+              <span class="item-card__icon">🖥</span>
+              <span class="item-card__name">Tela</span>
+              <span class="item-card__badge" id="badge-tela">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-tela"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-tela">
+              <label class="thumb-add" for="foto-tela">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-tela" accept="image/*" data-type="tela" data-group="bordo">
+            <div class="item-card__fields">
+              <input type="text" id="serie-tela" placeholder="Nº série tela" autocomplete="off">
+            </div>
+          </div>
+
+          <!-- Chip Bordo -->
+          <div class="item-card" id="card-chip-bordo">
+            <div class="item-card__header">
+              <span class="item-card__icon">📶</span>
+              <span class="item-card__name">Chip Bordo</span>
+              <span class="item-card__badge" id="badge-chip-bordo">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-chip-bordo"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-chip-bordo">
+              <label class="thumb-add" for="foto-chip-bordo">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-chip-bordo" accept="image/*" data-type="chip-bordo" data-group="bordo">
+            <div class="item-card__fields">
+              <input type="text" id="chip-bordo" placeholder="Número do chip" inputmode="numeric" autocomplete="off">
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /group bordo -->
+
+      <!-- ══ RÁDIO ══ -->
+      <div class="equip-group" id="group-radio">
+        <div class="equip-group__header">
+          <span class="equip-group__icon">📻</span>
+          <span class="equip-group__name">Rádio</span>
+          <span class="equip-group__count" id="count-radio">0 / 1</span>
+        </div>
+        <div class="items-grid">
+
+          <div class="item-card" id="card-radio">
+            <div class="item-card__header">
+              <span class="item-card__icon">📻</span>
+              <span class="item-card__name">Rádio</span>
+              <span class="item-card__badge" id="badge-radio">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-radio"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-radio">
+              <label class="thumb-add" for="foto-radio">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-radio" accept="image/*" data-type="radio" data-group="radio">
+            <div class="item-card__fields">
+              <input type="text" id="serie-radio" placeholder="Nº série rádio" autocomplete="off">
+              <input type="text" id="id-radio"    placeholder="ID rádio"        autocomplete="off">
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /group radio -->
+
+      <!-- ══ PILOTO AUTOMÁTICO — Monitor + Receptor + Nave ══ -->
+      <div class="equip-group" id="group-piloto">
+        <div class="equip-group__header">
+          <span class="equip-group__icon">🎯</span>
+          <span class="equip-group__name">Piloto Automático</span>
+          <span class="equip-group__count" id="count-piloto">0 / 3</span>
+        </div>
+        <div class="items-grid">
+
+          <!-- Monitor -->
+          <div class="item-card" id="card-monitor">
+            <div class="item-card__header">
+              <span class="item-card__icon">🖥</span>
+              <span class="item-card__name">Monitor</span>
+              <span class="item-card__badge" id="badge-monitor">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-monitor"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-monitor">
+              <label class="thumb-add" for="foto-monitor">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-monitor" accept="image/*" data-type="monitor" data-group="piloto">
+            <div class="item-card__fields">
+              <input type="text" id="serie-monitor" placeholder="Nº série monitor" autocomplete="off">
+            </div>
+          </div>
+
+          <!-- Receptor -->
+          <div class="item-card" id="card-receptor">
+            <div class="item-card__header">
+              <span class="item-card__icon">📡</span>
+              <span class="item-card__name">Receptor</span>
+              <span class="item-card__badge" id="badge-receptor">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-receptor"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-receptor">
+              <label class="thumb-add" for="foto-receptor">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-receptor" accept="image/*" data-type="receptor" data-group="piloto">
+            <div class="item-card__fields">
+              <input type="text" id="serie-receptor" placeholder="Nº série receptor" autocomplete="off">
+            </div>
+          </div>
+
+          <!-- Nave -->
+          <div class="item-card" id="card-nave">
+            <div class="item-card__header">
+              <span class="item-card__icon">🛰</span>
+              <span class="item-card__name">Nave</span>
+              <span class="item-card__badge" id="badge-nave">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-nave"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-nave">
+              <label class="thumb-add" for="foto-nave">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-nave" accept="image/*" data-type="nave" data-group="piloto">
+            <div class="item-card__fields">
+              <input type="text" id="serie-nave"  placeholder="Nº série nave"  autocomplete="off">
+              <input type="text" id="serie-tm200" placeholder="Nº série TM200" autocomplete="off">
+              <input type="text" id="serie-ag850" placeholder="Nº série AG850" autocomplete="off">
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /group piloto -->
+
+      <!-- ══ AUTOMAÇÃO ══ -->
+      <div class="equip-group" id="group-automacao">
+        <div class="equip-group__header">
+          <span class="equip-group__icon">⚙️</span>
+          <span class="equip-group__name">Automação</span>
+          <span class="equip-group__count" id="count-automacao">0 / 1</span>
+        </div>
+        <div class="items-grid">
+
+          <div class="item-card" id="card-automacao">
+            <div class="item-card__header">
+              <span class="item-card__icon">⚙️</span>
+              <span class="item-card__name">Automação</span>
+              <span class="item-card__badge" id="badge-automacao">0</span>
+            </div>
+            <div class="item-card__loading" id="loading-automacao"><span class="spinner spinner--green"></span></div>
+            <div class="item-card__thumbs" id="thumbs-automacao">
+              <label class="thumb-add" for="foto-automacao">
+                <span class="thumb-add__icon">📷</span>
+                <span class="thumb-add__text">foto</span>
+              </label>
+            </div>
+            <input type="file" class="item-file" id="foto-automacao" accept="image/*" data-type="automacao" data-group="automacao">
+            <div class="item-card__fields">
+              <input type="text" id="serie-automacao" placeholder="Nº série automação" autocomplete="off">
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /group automacao -->
+
+    </div><!-- /simple-card fotos -->
+
+    <!-- ── OBSERVAÇÃO ──────────────────────────────────────── -->
+    <div class="simple-card">
+      <p class="simple-card__title">📝 Observação <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.68rem">(opcional)</span></p>
+      <textarea id="observacao" placeholder="Alguma observação relevante…" rows="3"></textarea>
+    </div>
+
+    <div class="form-spacer"></div>
+  </form>
+</main>
+
+<!-- ═══ SUBMIT FIXO ══════════════════════════════════════════ -->
+<div class="submit-bar">
+  <button type="submit" form="form-inventario" class="btn btn--primary" id="btn-submit">
+    <span>📤</span> Enviar Inventário
+  </button>
+</div>
+
+<script src="js/firebase-demo.js"></script>
+<script src="js/compress.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

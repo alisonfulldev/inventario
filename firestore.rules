@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Inventários ─────────────────────────────────────────────
+    // Qualquer usuário autenticado pode criar inventário
+    // Apenas admins podem ler/listar todos os inventários
+    match /inventarios/{docId} {
+
+      // Leitura: admin OU o próprio usuário que criou
+      allow read: if request.auth != null
+        && (isAdmin() || request.auth.uid == resource.data.uid);
+
+      // Criação: qualquer usuário autenticado
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid;
+
+      // Atualização e deleção: apenas admin
+      allow update, delete: if request.auth != null && isAdmin();
+    }
+
+    // ── Função auxiliar ─────────────────────────────────────────
+    // Adicione os UIDs dos admins no array abaixo
+    function isAdmin() {
+      return request.auth.uid in [
+        // "UID_DO_ADMIN_1",
+        // "UID_DO_ADMIN_2"
+      ];
+    }
+  }
+}
