@@ -172,15 +172,3 @@ window.storage     = storage;
 window.isAdmin     = isAdmin;
 window.ADMIN_UIDS  = ADMIN_UIDS;
 
-// ─── Banner de aviso ──────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  const banner = document.createElement('div');
-  banner.style.cssText = [
-    'position:fixed', 'bottom:0', 'left:0', 'right:0',
-    'background:#f9a825', 'color:#1a1a1a', 'text-align:center',
-    'padding:7px 12px', 'font-size:.78rem', 'font-weight:700',
-    'z-index:9999', 'letter-spacing:.2px',
-  ].join(';');
-  banner.textContent = '⚠ MODO DEMO — dados salvos apenas neste navegador | tecnico@demo.com ou admin@demo.com / 123456';
-  document.body.appendChild(banner);
-});
