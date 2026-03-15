@@ -45,6 +45,7 @@ body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
+  overflow-x: hidden;
   line-height: 1.5;
   min-height: 100vh;
   min-height: -webkit-fill-available;
@@ -617,7 +618,7 @@ textarea { resize: vertical; min-height: 96px; font-size: 16px; }
    ============================================================ */
 .login-wrapper {
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
